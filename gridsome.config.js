@@ -5,8 +5,8 @@
 // To restart press CTRL + C in terminal and run `gridsome develop`
 
 module.exports = {
-  siteName: 'Gridsome Blog Starter',
-  siteDescription: 'A simple, hackable & minimalistic starter for Gridsome that uses Markdown for content.',
+  siteName: 'makepin2r',
+  siteDescription: 'makepin2r의 블로그입니다.',
 
   templates: {
     Post: '/:title',
@@ -41,5 +41,8 @@ module.exports = {
         '@gridsome/remark-prismjs'
       ]
     }
-  }
+  },
+
+  siteUrl: 'https://makepin2r.github.io',
+  pathPrefix: '/blog'  
 }
