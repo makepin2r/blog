@@ -5,22 +5,27 @@
 // To restart press CTRL + C in terminal and run `gridsome develop`
 
 module.exports = {
-  siteUrl: "http://localhost:8080",
-  siteName: "Gridsome Flex Markdown Start",
-  siteDescription: "My Starter",
+  siteUrl: "https://my-name.github.io",
+  pathPrefix: "/blog",
+  siteName: "makepin2r",
+  siteDescription: "makepin2r의 블로그입니다",
   metadata: {
     siteAuthor: "Me",
     sitePublished: 2021,
     pages: [
       { title: "About me", link: "/pages/about/" },
+      // {
+      //   title: "The theme",
+      //   link: "//github.com/phoenix741/gridsome-flex-markdown-starter",
+      // },
       {
-        title: "The theme",
-        link: "//github.com/phoenix741/gridsome-flex-markdown-starter",
-      },
+        title: "Posts",
+        link : "/categories/"
+      }
     ],
     socials: [
-      { type: "github", link: "//github.com/phoenix741/" },
-      { type: "rss", link: "/feed.atom" },
+      { type: "github", link: "//github.com/makepin2r/" },
+      // { type: "rss", link: "/feed.atom" },
     ],
     utterances: {
       repo: "phoenix741/comments.myblog",
