@@ -1,48 +1,126 @@
 // This is where project configuration and plugin options are located.
 // Learn more: https://gridsome.org/docs/config
 
-// Changes here requires a server restart.
+// Changes here require a server restart.
 // To restart press CTRL + C in terminal and run `gridsome develop`
 
 module.exports = {
-  siteName: 'makepin2r',
-  siteDescription: 'makepin2r의 블로그입니다.',
-
-  templates: {
-    Post: '/:title',
-    Tag: '/tag/:id'
+  siteUrl: "http://localhost:8080",
+  siteName: "Gridsome Flex Markdown Start",
+  siteDescription: "My Starter",
+  metadata: {
+    siteAuthor: "Me",
+    sitePublished: 2021,
+    pages: [
+      { title: "About me", link: "/pages/about/" },
+      {
+        title: "The theme",
+        link: "//github.com/phoenix741/gridsome-flex-markdown-starter",
+      },
+    ],
+    socials: [
+      { type: "github", link: "//github.com/phoenix741/" },
+      { type: "rss", link: "/feed.atom" },
+    ],
+    utterances: {
+      repo: "phoenix741/comments.myblog",
+      issueTerm: "title",
+      label: "discussion",
+    },
   },
-
   plugins: [
     {
-      // Create posts from markdown files
-      use: '@gridsome/source-filesystem',
+      use: "@gridsome/source-filesystem",
       options: {
-        typeName: 'Post',
-        path: 'content/posts/*.md',
+        baseDir: "content/posts",
+        path: "**/*.md",
+        typeName: "Post",
         refs: {
-          // Creates a GraphQL collection from 'tags' in front-matter and adds a reference.
           tags: {
-            typeName: 'Tag',
-            create: true
-          }
-        }
-      }
-    }
+            typeName: "Tag",
+            create: true,
+          },
+          category: {
+            typeName: "Category",
+            create: true,
+          },
+        },
+      },
+    },
+    {
+      use: "@microflash/gridsome-plugin-feed",
+      options: {
+        contentTypes: ["Post"],
+        feedOptions: {
+          title: "Gridsome Flex Markdown Start",
+          description: "My Starter",
+        },
+        rss: {
+          enabled: true,
+          output: "/feed.xml",
+        },
+        atom: {
+          enabled: true,
+          output: "/feed.atom",
+        },
+      },
+    },
+    {
+      use: "@gridsome/source-filesystem",
+      options: {
+        baseDir: "content/pages",
+        path: "*.md",
+        typeName: "BlogPage",
+      },
+    },
+    {
+      use: "@gridsome/plugin-sitemap",
+      options: {
+        config: {
+          "/post/*": {
+            changefreq: "weekly",
+            priority: 0.5,
+          },
+          "/page/*": {
+            changefreq: "monthly",
+            priority: 0.7,
+          },
+        },
+      },
+    },
   ],
-
-  transformers: {
-    //Add markdown support to all file-system sources
-    remark: {
-      externalLinksTarget: '_blank',
-      externalLinksRel: ['nofollow', 'noopener', 'noreferrer'],
-      anchorClassName: 'icon icon-link',
-      plugins: [
-        '@gridsome/remark-prismjs'
-      ]
-    }
+  templates: {
+    Post: "/post/:fileInfo__name",
+    BlogPage: "/pages/:fileInfo__name",
+    Tag: "/tag/:id",
+    Category: "/category/:title",
   },
-
-  siteUrl: 'https://makepin2r.github.io',
-  pathPrefix: '/blog'  
-}
+  transformers: {
+    remark: {
+      plugins: [
+        ["@gridsome/remark-prismjs", { showLineNumbers: true }],
+        "remark-inline-links",
+        ["remark-toc", { heading: "sommaire" }],
+        "remark-attr",
+      ],
+      config: {
+        footnotes: true,
+      },
+    },
+  },
+  permalinks: {
+    slugify: {
+      use: "@sindresorhus/slugify",
+      options: {
+        decamelize: false,
+      },
+    },
+  },
+  css: {
+    loaderOptions: {
+      less: {
+        // options here will be passed to less-loader
+      },
+    },
+  },
+};

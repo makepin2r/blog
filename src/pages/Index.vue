@@ -1,33 +1,39 @@
 <template>
-  <Layout :show-logo="false">
-    <!-- Author intro -->
-    <Author :show-title="true" />
+  <Layout>
+    <PostSummary v-for="edge in $page.posts.edges" :key="edge.node.id" :post="edge.node"/>
 
-    <!-- List posts -->
-    <div class="posts">
-      <PostCard v-for="edge in $page.posts.edges" :key="edge.node.id" :post="edge.node"/>
-    </div>
-
+    <Pager class="pagination" 
+      :info="$page.posts.pageInfo" 
+      linkClass="btn"
+      />
   </Layout>
 </template>
 
 <page-query>
-query {
-  posts: allPost(filter: { published: { eq: true }}) {
+query ($page: Int) {
+  posts: allPost(perPage: 10, page: $page, filter: { published: { eq: true }}) @paginate {
+    pageInfo {
+      totalPages
+      currentPage
+    }
     edges {
       node {
         id
         title
         date (format: "D. MMMM YYYY")
         timeToRead
-        description
-        cover_image (width: 770, height: 380, blur: 10)
         path
+        category {
+          id
+          title
+          path
+        }
         tags {
           id
           title
           path
         }
+        excerpt
       }
     }
   }
@@ -35,16 +41,13 @@ query {
 </page-query>
 
 <script>
-import Author from '~/components/Author.vue'
-import PostCard from '~/components/PostCard.vue'
+import { Pager } from 'gridsome';
+import PostSummary from '~/components/PostSummary.vue'
 
 export default {
   components: {
-    Author,
-    PostCard
-  },
-  metaInfo: {
-    title: 'Hello, world!'
+    Pager,
+    PostSummary
   }
 }
 </script>

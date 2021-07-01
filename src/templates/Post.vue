@@ -1,57 +1,92 @@
 <template>
   <Layout>
-    <div class="post-title">
-      <h1 class="post-title__text">
-        {{ $page.post.title }}
-      </h1>
+    <article class="single">
+      <header>
+        <h1 v-html="$page.post.title"></h1>
+        <p>
+          <PostHeaderTitle :post="$page.post"></PostHeaderTitle>
+        </p>
+      </header>
 
-      <PostMeta :post="$page.post" />
+      <div v-html="$page.post.content"></div>
 
-    </div>
-
-    <div class="post content-box">
-      <div class="post__header">
-        <g-image alt="Cover image" v-if="$page.post.cover_image" :src="$page.post.cover_image" />
+      <div class="tag-cloud">
+        <p>
+          <template v-for="tag in $page.post.tags">
+            <g-link :key="tag.id" :to="tag.path">{{ tag.title }}</g-link
+            >{{ " " }}
+          </template>
+        </p>
       </div>
 
-      <div class="post__content" v-html="$page.post.content" />
-
-      <div class="post__footer">
-        <PostTags :post="$page.post" />
+      <div class="related-posts">
+        <h4>Billets similaires</h4>
+        <ul class="related-posts">
+          <li v-for="rel in related" :key="rel.id">
+            <g-link :to="rel.path">{{ rel.title }} </g-link>
+          </li>
+        </ul>
       </div>
-    </div>
 
-    <div class="post-comments">
-      <!-- Add comment widgets here -->
-    </div>
-
-    <Author class="post-author" />
+      <ClientOnly>
+        <div class="commentswrap">
+          <div id="comments">
+            <GithubComponent
+              :title="$page.post.title"
+              :repo="$page.metadata.utterances.repo"
+              :pathname="this.$route.path"
+              :url="url"
+              :issueTerm="$page.metadata.utterances.issueTerm"
+              :label="$page.metadata.utterances.label"
+            ></GithubComponent>
+          </div>
+        </div>
+      </ClientOnly>
+    </article>
   </Layout>
 </template>
 
 <script>
-import PostMeta from '~/components/PostMeta'
-import PostTags from '~/components/PostTags'
-import Author from '~/components/Author.vue'
+import PostHeaderTitle from "../components/PostHeaderTitle";
 
 export default {
   components: {
-    Author,
-    PostMeta,
-    PostTags
+    PostHeaderTitle,
+    GithubComponent: () =>
+      import("../components/GithubComponent")
+        .then((m) => m.default)
+        .catch(),
   },
-  metaInfo () {
+  metaInfo() {
     return {
       title: this.$page.post.title,
       meta: [
         {
-          name: 'description',
-          content: this.$page.post.description
-        }
-      ]
-    }
-  }
-}
+          key: "description",
+          name: "description",
+          content: this.$page.post.description,
+        },
+      ],
+    };
+  },
+  computed: {
+    origin() {
+      return process.isClient ? window.origin : this.$page.metadata.siteUrl;
+    },
+    url() {
+      return this.origin + this.$route.path;
+    },
+    related() {
+      return this.$page.post.tags
+        .map((tag) => tag.belongsTo.edges)
+        .flat()
+        .map((rel) => rel.node)
+        .filter((item, index, array) => {
+          return array.findIndex((i) => i.id === item.id) === index;
+        });
+    },
+  },
+};
 </script>
 
 <page-query>
@@ -61,71 +96,40 @@ query Post ($id: ID!) {
     path
     date (format: "D. MMMM YYYY")
     timeToRead
-    tags {
+    category {
       id
       title
       path
     }
-    description
+    tags {
+      id
+      title
+      path
+      belongsTo(
+          sortBy: "published_at",
+          order: DESC,
+          limit: 3,
+          filter: { typeName: { eq: Post } }) {
+            edges {
+              node {
+                ... on Post {
+                  id
+                  title
+                  path
+                }
+              }
+            }
+          }
+    }
     content
-    cover_image (width: 860, blur: 10)
   }
+  metadata {
+		siteUrl
+    utterances {
+      repo
+      issueTerm
+      label
+    }
+	}
 }
 </page-query>
-
-<style lang="scss">
-.post-title {
-  padding: calc(var(--space) / 2) 0 calc(var(--space) / 2);
-  text-align: center;
-}
-
-.post {
-
-  &__header {
-    width: calc(100% + var(--space) * 2);
-    margin-left: calc(var(--space) * -1);
-    margin-top: calc(var(--space) * -1);
-    margin-bottom: calc(var(--space) / 2);
-    overflow: hidden;
-    border-radius: var(--radius) var(--radius) 0 0;
-
-    img {
-      width: 100%;
-    }
-
-    &:empty {
-      display: none;
-    }
-  }
-
-  &__content {
-    h2:first-child {
-      margin-top: 0;
-    }
-
-    p:first-of-type {
-      font-size: 1.2em;
-      color: var(--title-color);
-    }
-
-    img {
-      width: calc(100% + var(--space) * 2);
-      margin-left: calc(var(--space) * -1);
-      display: block;
-      max-width: none;
-    }
-  }
-}
-
-.post-comments {
-  padding: calc(var(--space) / 2);
-
-  &:empty {
-    display: none;
-  }
-}
-
-.post-author {
-  margin-top: calc(var(--space) / 2);
-}
-</style>

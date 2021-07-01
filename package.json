@@ -4,19 +4,21 @@
   "scripts": {
     "build": "gridsome build",
     "develop": "gridsome develop",
-    "explore": "gridsome explore",
-    "deploy": "gridsome build && gh-pages -d dist"
+    "explore": "gridsome explore"
   },
   "dependencies": {
-    "@gridsome/plugin-google-analytics": "^0.1.0",
-    "@gridsome/remark-prismjs": "^0.2.0",
-    "@gridsome/source-filesystem": "^0.6.0",
-    "@gridsome/transformer-remark": "^0.3.0",
-    "gh-pages": "^3.2.3",
-    "gridsome": "^0.7.0"
-  },
-  "devDependencies": {
-    "node-sass": "^4.12.0",
-    "sass-loader": "^8.0.0"
+    "@gridsome/plugin-sitemap": "^0.4.0",
+    "@gridsome/remark-prismjs": "^0.5.0",
+    "@gridsome/source-filesystem": "^0.6.2",
+    "@gridsome/transformer-remark": "^0.6.4",
+    "@microflash/gridsome-plugin-feed": "^1.2.1",
+    "gridsome": "^0.7.0",
+    "less": "^4.1.1",
+    "less-loader": "^7.0.0",
+    "remark": "^10.0.0",
+    "remark-attr": "^0.11.1",
+    "remark-inline-links": "^5.0.0",
+    "remark-toc": "^7.1.0",
+    "truncatise": "0.0.8"
   }
 }

@@ -1,85 +1,90 @@
 <template>
-  <div id="app">
+  <div>
+    <aside>
+      <div>
+        <Author></Author>
 
-    <header class="header">
-      <div class="header__left">
-        <Logo v-if="showLogo" /> 
-      </div>
-      
-      <div class="header__right">        
-        <ToggleTheme />
-      </div>
-    </header>
+        <nav>
+          <ul class="list">
+            <li v-for="page in $static.metadata.pages" :key="page.title">
+              <g-link :to="page.link">{{ page.title }}</g-link>
+            </li>
+          </ul>
+        </nav>
 
-    <main class="main">
-      <slot/>
+        <ul class="social">
+          <li v-for="page in $static.metadata.socials" :key="page.type">
+            <g-link :class="`sc-${page.type}`" :to="page.link">
+              <i :class="`fa fa-${page.type}`"></i>
+            </g-link>
+          </li>
+        </ul>
+      </div>
+    </aside>
+    <main>
+      <nav>
+        <g-link to="/">Home</g-link>
+        <g-link to="/archives">Archives</g-link>
+        <g-link to="/categories">Categories</g-link>
+        <g-link to="/tags">Tags</g-link>
+        <g-link to="/feed.atom">ATOM</g-link>
+      </nav>
+
+      <slot />
+
+      <footer>
+        <p>
+          &copy; {{ $static.metadata.siteAuthor }}
+          {{ $static.metadata.sitePublished }}-{{ todayYear }}
+        </p>
+        <p>
+          Powered by <g-link to="https://gridsome.org/">Gridsome</g-link> -
+          <g-link
+            to="https://github.com/phoenix741/gridsome-flex-markdown-starter"
+            >Flex</g-link
+          >
+          theme by
+          <g-link to="https://shadoware.org">Ulrich Vandenhekke</g-link>
+        </p>
+        <p>
+          Fork of
+          <g-link to="https://github.com/alexandrevicenzi/flex">Flex</g-link>
+          theme by
+          <g-link to="http://alexandrevicenzi.com">Alexandre Vicenzi</g-link>
+        </p>
+      </footer>
     </main>
-
-    <footer class="footer">
-      <span class="footer__copyright">Copyright © {{ new Date().getFullYear() }}. </span>
-      <span class="footer__links">Powered by <a href="//gridsome.org"> Gridsome </a></span>
-    </footer>
-
   </div>
 </template>
 
+<static-query>
+query {
+  metadata {
+    siteAuthor
+    sitePublished
+    pages {
+      title
+      link
+    }
+    socials {
+      type
+      link
+    }
+  }
+}
+</static-query>
+
 <script>
-import Logo from '~/components/Logo.vue'
-import ToggleTheme from '~/components/ToggleTheme.vue'
+import Author from "~/components/Author.vue";
 
 export default {
-  props: {
-    showLogo: { default: true }
-  },
   components: {
-    Logo,
-    ToggleTheme
-  }
-}
+    Author,
+  },
+  computed: {
+    todayYear() {
+      return new Date().getFullYear();
+    },
+  },
+};
 </script>
-
-<style lang="scss">
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: var(--header-height);
-  padding: 0 calc(var(--space) / 2);
-  top:0;
-  z-index: 10;
-
-  &__left,
-  &__right {
-    display: flex;
-    align-items: center;
-  }
-
-  @media screen and (min-width: 1300px) {
-    //Make header sticky for large screens
-    position: sticky;
-    width: 100%;
-  }
-}
-
-.main {
-  margin: 0 auto;
-  padding: 1.5vw 15px 0;
-}
-
-.footer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: calc(var(--space) / 2);
-  text-align: center;
-  font-size: .8em;
-
-  > span {
-    margin: 0 .35em;
-  }
-
-  a {
-    color: currentColor;
-  }
-}
-</style>
