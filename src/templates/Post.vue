@@ -19,6 +19,13 @@
         </p>
       </div>
 
+      <div class="post-comments">
+        <Disqus 
+          shortname="https-makepin2r-github-io-blog" 
+          :identifier="$page.post.title" 
+        />
+      </div>
+
       <div class="related-posts">
         <h4>Billets similaires</h4>
         <ul class="related-posts">

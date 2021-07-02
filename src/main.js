@@ -3,12 +3,15 @@ import "~/assets/stylesheet/style.less";
 import "~/assets/font-awesome/css/font-awesome.min.css";
 import "prismjs/themes/prism-tomorrow.css";
 import "prismjs/plugins/line-numbers/prism-line-numbers.css";
+import VueDisqus from "vue-disqus";
 
 // Import default layout so we don't need to import it to every page
 import DefaultLayout from "~/layouts/Default.vue";
 
 // The Client API can be used here. Learn more: gridsome.org/docs/client-api
 export default function(Vue, { router, head, isClient }) {
+  Vue.use(VueDisqus);
+
   // Add attributes to HTML tag
   head.htmlAttrs = { lang: "fr" };
   head.link.push({
