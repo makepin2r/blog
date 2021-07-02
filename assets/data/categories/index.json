@@ -1,1 +1,1 @@
-{"hash":"b44c4c3844642fb1f6cd46c69967ab7a5f00fdf5","data":{"allCategory":{"edges":[{"node":{"id":"MyPost","title":"MyPost","path":"/category/mypost/","belongsTo":{"totalCount":2}}}]}},"context":{}}
+{"hash":"442d8872c906cffb09f0179249010b252411156f","data":{"allCategory":{"edges":[{"node":{"id":"MyPost","title":"MyPost","path":"/category/mypost/","belongsTo":{"totalCount":2}}},{"node":{"id":"blog","title":"blog","path":"/category/blog/","belongsTo":{"totalCount":1}}}]}},"context":{}}
